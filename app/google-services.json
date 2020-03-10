@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "377284473309",
+    "firebase_url": "https://ikpmd-work-time-tracker.firebaseio.com",
+    "project_id": "ikpmd-work-time-tracker",
+    "storage_bucket": "ikpmd-work-time-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377284473309:android:ce0c76a8023cbb1a93c634",
+        "android_client_info": {
+          "package_name": "net.vanduijn.worktimetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "377284473309-5n0li2604k5s61rb1ghcg13hj2r71e99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK0q9PXSFnmUnpJUgkmfGiVYcVjs4QDJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "377284473309-5n0li2604k5s61rb1ghcg13hj2r71e99.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
