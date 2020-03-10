@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import java.time.LocalDateTime;
 
@@ -26,10 +27,21 @@ public class MainActivity extends AppCompatActivity {
 
         if (!isWorking) {
             saveStartTime(now);
+            this.isWorking = true;
+            updateStartStopButton();
             Log.d("StartTime", now.toString());
         } else {
             saveEndTime(now);
             Log.d("EndTime", now.toString());
+        }
+    }
+
+    private void updateStartStopButton() {
+        Button startStopButton = findViewById(R.id.btn_start_stop);
+        if (!isWorking) {
+            startStopButton.setText(R.string.start_work);
+        } else {
+            startStopButton.setText(R.string.stop_work);
         }
     }
 
