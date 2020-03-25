@@ -8,6 +8,21 @@
     android:background="@color/colorPrimary"
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:id="@+id/companyLogo"
+        android:layout_width="266dp"
+        android:layout_height="185dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/logo" />
+
+    <ProgressBar
+        android:id="@+id/progressSpinner"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:visibility="invisible"
+        android:layout_centerInParent="true" />
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"

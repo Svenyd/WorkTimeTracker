@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String USER = "USER";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Button btn_login = findViewById(R.id.btn_login);
+        spinner = findViewById(R.id.progressSpinner);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -68,13 +71,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void SignInGoogle() {
-        //TODO: set progress bar to visible
+        spinner.setVisibility(ProgressBar.VISIBLE);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
     private void updateUI(FirebaseUser user) {
-        //TODO: update UI
         if (user != null) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(USER, user);
@@ -89,14 +91,14 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        //TODO: set progress bar invisible
+                        spinner.setVisibility(ProgressBar.INVISIBLE);
 
                         Log.d("TAG", "signInWithCredential:success");
 
                         FirebaseUser user = mAuth.getCurrentUser();
                         updateUI(user);
                     } else {
-                        //TODO: set progress bar invisible
+                        spinner.setVisibility(ProgressBar.INVISIBLE);
 
                         Log.w("TAG", "signInWithCredential:failure", task.getException());
 
