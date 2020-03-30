@@ -3,6 +3,7 @@ package net.vanduijn.worktimetracker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -87,5 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveEndTime(LocalDateTime now) {
         //TODO: save end time to Firebase
+    }
+
+    public void toMonthOverview(View view) {
+        Intent intent = new Intent(this, OverviewActivity.class);
+        startActivity(intent);
     }
 }
