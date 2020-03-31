@@ -1,19 +1,30 @@
 package net.vanduijn.worktimetracker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import net.vanduijn.worktimetracker.Adapters.LogEntryAdapter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class OverviewActivity extends AppCompatActivity implements LogEntryAdapter.ItemClickListener {
 
@@ -21,6 +32,15 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
 
     private TextView txtMonth;
     private LogEntryAdapter logEntryAdapter;
+
+    private static final String TAG = "OVERVIEW_ACTIVITY";
+    private static final String WORK_LOG = "work_log";
+    private static final String LATEST_LOG = "latestLog";
+    private static final String START_TIME = "start_time";
+    private static final String END_TIME = "end_time";
+
+    private FirebaseFirestore db;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +58,24 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
         btnNext.setWidth(getResources().getDisplayMetrics().widthPixels/3);
 
         //todo: get data from this month
+
+        db = FirebaseFirestore.getInstance();
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        assert user != null;
+        db.collection(user.getUid()).document(WORK_LOG).collection(dateTime.toString().substring(0, 7))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                        }
+                    } else {
+                        Log.w(TAG, "Error getting documents.", task.getException());
+                    }
+                });
 
         //temp
         ArrayList<String> dates = new ArrayList<>();
