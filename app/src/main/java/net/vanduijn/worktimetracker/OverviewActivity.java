@@ -1,6 +1,5 @@
 package net.vanduijn.worktimetracker;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,18 +11,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import net.vanduijn.worktimetracker.Adapters.LogEntryAdapter;
+import net.vanduijn.worktimetracker.adapters.LogEntryAdapter;
+import net.vanduijn.worktimetracker.models.WorkLog;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
 public class OverviewActivity extends AppCompatActivity implements LogEntryAdapter.ItemClickListener {
@@ -57,8 +56,6 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
         Button btnNext = findViewById(R.id.btn_next_month);
         btnNext.setWidth(getResources().getDisplayMetrics().widthPixels/3);
 
-        //todo: get data from this month
-
         db = FirebaseFirestore.getInstance();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -69,29 +66,24 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        ArrayList<WorkLog> workLogs = new ArrayList<>();
                         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            workLogs.add(document.toObject(WorkLog.class));
                             Log.d(TAG, document.getId() + " => " + document.getData());
                         }
+
+                        Collections.sort(workLogs);
+
+                        //Setup recyclerView
+                        RecyclerView recyclerView = findViewById(R.id.rvWorkLogs);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                        logEntryAdapter = new LogEntryAdapter(this, workLogs);
+                        logEntryAdapter.setClickListener(this);
+                        recyclerView.setAdapter(logEntryAdapter);
                     } else {
                         Log.w(TAG, "Error getting documents.", task.getException());
                     }
                 });
-
-        //temp
-        ArrayList<String> dates = new ArrayList<>();
-        dates.add("2020-03-20");
-        dates.add("2020-03-21");
-        dates.add("2020-03-22");
-        dates.add("2020-03-23");
-        dates.add("2020-03-24");
-        dates.add("2020-03-25");
-
-        //Setup recyclerView
-        RecyclerView recyclerView = findViewById(R.id.rvWorkLogs);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        logEntryAdapter = new LogEntryAdapter(this, dates);
-        logEntryAdapter.setClickListener(this);
-        recyclerView.setAdapter(logEntryAdapter);
     }
 
     @Override
