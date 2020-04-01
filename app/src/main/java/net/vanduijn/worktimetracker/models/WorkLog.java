@@ -16,6 +16,10 @@ public class WorkLog implements Comparable {
         this.end_time = LocalDateTime.parse(endTime);
     }
 
+    public int getTimeWorked() {
+        return end_time != null ? (int) (end_time.toEpochSecond(ZoneOffset.UTC) - start_time.toEpochSecond(ZoneOffset.UTC)) : 0;
+    }
+
     public LocalDateTime getStart_time() {
         return start_time;
     }

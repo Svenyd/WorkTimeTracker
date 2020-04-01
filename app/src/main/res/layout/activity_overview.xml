@@ -18,7 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="MONTH YEAR" />
+        android:text="MONTH YEAR"
+        android:gravity="center"/>
 
     <Button
         android:id="@+id/btn_next_month"
@@ -31,8 +32,54 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWorkLogs"
         android:layout_width="match_parent"
-        android:layout_height="684dp"
-        android:layout_below="@+id/btn_previous_month">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_below="@+id/btn_previous_month"
+        android:layout_above="@+id/divider"
+        android:layout_height="0dp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_above="@+id/lbl_overview"/>
+
+    <TextView
+        android:id="@+id/lbl_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_above="@+id/lbl_total_time"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:textSize="10sp"
+        android:gravity="bottom|start"
+        android:text="OVERVIEW:" />
+
+    <TextView
+        android:id="@+id/lbl_total_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="16dp"
+        android:height="20dp"
+        android:textColor="@color/colorAccent"
+        android:gravity="bottom|start"
+        android:text="Total Time:"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/txt_total_time_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/colorAccent"
+        android:gravity="bottom|start"
+        android:text="69:00"/>
+
 
 </RelativeLayout>

@@ -33,12 +33,6 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
 
     private static final String TAG = "OVERVIEW_ACTIVITY";
     private static final String WORK_LOG = "work_log";
-    private static final String LATEST_LOG = "latestLog";
-    private static final String START_TIME = "start_time";
-    private static final String END_TIME = "end_time";
-
-    private FirebaseFirestore db;
-    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +58,10 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
     }
 
     public void fillLogList() {
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
+        FirebaseUser user = mAuth.getCurrentUser();
 
         assert user != null;
         db.collection(user.getUid()).document(WORK_LOG).collection(dateTime.toString().substring(0, 7))
@@ -88,6 +82,14 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
                         logEntryAdapter = new LogEntryAdapter(this, workLogs);
                         logEntryAdapter.setClickListener(this);
                         recyclerView.setAdapter(logEntryAdapter);
+
+                        //Calculate totalTime
+                        TextView txtTotalTime = findViewById(R.id.txt_total_time_month);
+                        int totalTimeInSeconds = workLogs.stream().mapToInt(WorkLog::getTimeWorked).sum();
+                        String hours = (int) Math.floor(totalTimeInSeconds / 3600) < 10 ? "0" + (int) Math.floor(totalTimeInSeconds / 3600) : String.valueOf((int) Math.floor(totalTimeInSeconds / 3600));
+                        String minutes = (totalTimeInSeconds % 3600) / 60 < 10 ? "0" + (totalTimeInSeconds % 3600) / 60 : (totalTimeInSeconds % 3600) / 60 + "";
+                        txtTotalTime.setText(hours + ":" + minutes);
+
                     } else {
                         Log.w(TAG, "Error getting documents.", task.getException());
                     }
