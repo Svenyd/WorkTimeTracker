@@ -4,4 +4,7 @@
     <string name="start_work">Start working</string>
     <string name="stop_work">Stop working</string>
     <string name="login_with_google">LOGIN WITH GOOGLE</string>
+    <string name="month_overview">Month Overview</string>
+    <string name="previous"><![CDATA[<]]></string>
+    <string name="next"><![CDATA[>]]></string>
 </resources>
