@@ -22,7 +22,6 @@ import net.vanduijn.worktimetracker.models.WorkLog;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 
 public class OverviewActivity extends AppCompatActivity implements LogEntryAdapter.ItemClickListener {
@@ -56,6 +55,15 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
         Button btnNext = findViewById(R.id.btn_next_month);
         btnNext.setWidth(getResources().getDisplayMetrics().widthPixels/3);
 
+        fillLogList();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + logEntryAdapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    public void fillLogList() {
         db = FirebaseFirestore.getInstance();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -86,23 +94,18 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
                 });
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + logEntryAdapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-    }
-
     public void previousMonth(View v) {
         dateTime = dateTime.minusMonths(1);
         txtMonth.setText(getMonthYearString(dateTime));
 
-        //todo: get data previous month
+        fillLogList();
     }
 
     public void nextMonth(View v) {
         dateTime = dateTime.plusMonths(1);
         txtMonth.setText(getMonthYearString(dateTime));
 
-        //todo: get data next month
+        fillLogList();
     }
 
     private String getMonthYearString(LocalDateTime dateTime) {
