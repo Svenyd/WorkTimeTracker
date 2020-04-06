@@ -40,6 +40,10 @@ public class LogEntryAdapter extends RecyclerView.Adapter<LogEntryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         WorkLog workLog = data.get(position);
 
+        if (workLog.getEnd_time() == null) {
+            workLog.setEnd_time(LocalDateTime.now().toString());
+        }
+
         String date = workLog.getStart_time().toString().substring(0, 10);
         String time = workLog.getStart_time().toString().substring(11, 16) + " - " + workLog.getEnd_time().toString().substring(11,16);
         String totalHours = getTotalHoursWorked(workLog);
