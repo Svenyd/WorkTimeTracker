@@ -17,7 +17,8 @@ public class WorkLog implements Comparable {
     }
 
     public int getTimeWorked() {
-        return end_time != null ? (int) (end_time.toEpochSecond(ZoneOffset.UTC) - start_time.toEpochSecond(ZoneOffset.UTC)) : 0;
+        //if there is no endTime return time worked from startTime until now
+        return end_time != null ? (int) (end_time.toEpochSecond(ZoneOffset.UTC) - start_time.toEpochSecond(ZoneOffset.UTC)) : (int) (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - start_time.toEpochSecond(ZoneOffset.UTC));
     }
 
     public LocalDateTime getStart_time() {
