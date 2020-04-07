@@ -37,7 +37,7 @@
         android:text="@string/start_work"
         android:layout_centerHorizontal="true"
 
-        android:background="@drawable/round_bg"
+        android:background="@drawable/round_bg_white"
         />
 
     <Button
@@ -49,6 +49,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="toMonthOverview"
-        android:background="@drawable/round_bg"
+        android:background="@drawable/round_bg_white"
         android:text="@string/month_overview" />
 </RelativeLayout>
