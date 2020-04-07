@@ -5,10 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import net.vanduijn.worktimetracker.OverviewActivity;
 import net.vanduijn.worktimetracker.R;
 import net.vanduijn.worktimetracker.models.WorkLog;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -22,6 +27,8 @@ public class LogEntryAdapter extends RecyclerView.Adapter<LogEntryAdapter.ViewHo
     private List<WorkLog> data;
     private LayoutInflater layoutInflater;
     private ItemClickListener itemClickListener;
+    private WorkLog mRecentlyDeletedItem;
+    private int mRecentlyDeletedItemPosition;
 
     // data is passed into the constructor
     public LogEntryAdapter(Context context, ArrayList<WorkLog> data) {
@@ -75,6 +82,32 @@ public class LogEntryAdapter extends RecyclerView.Adapter<LogEntryAdapter.ViewHo
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    public Context getContext() {
+        return layoutInflater.getContext();
+    }
+
+    public void deleteItem(int position) {
+        mRecentlyDeletedItem = data.get(position);
+        mRecentlyDeletedItemPosition = position;
+        data.remove(position);
+        notifyItemRemoved(position);
+        showUndoSnackbar();
+    }
+
+    private void showUndoSnackbar() {
+        View view = findViewById(R.id.coordinator_layout);
+        Snackbar snackbar = Snackbar.make(view, R.string.snack_bar_text,
+                Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.snack_bar_undo, v -> undoDelete());
+        snackbar.show();
+    }
+
+    private void undoDelete() {
+        mListItems.add(mRecentlyDeletedItemPosition,
+                mRecentlyDeletedItem);
+        notifyItemInserted(mRecentlyDeletedItemPosition);
     }
 
     // parent activity will implement this method to respond to click events

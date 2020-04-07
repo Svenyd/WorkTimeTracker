@@ -1,6 +1,7 @@
 package net.vanduijn.worktimetracker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import net.vanduijn.worktimetracker.adapters.LogEntryAdapter;
+import net.vanduijn.worktimetracker.callbacks.SwipeToDeleteCallback;
 import net.vanduijn.worktimetracker.models.WorkLog;
 
 import java.time.LocalDateTime;
@@ -82,6 +84,10 @@ public class OverviewActivity extends AppCompatActivity implements LogEntryAdapt
                         logEntryAdapter = new LogEntryAdapter(this, workLogs);
                         logEntryAdapter.setClickListener(this);
                         recyclerView.setAdapter(logEntryAdapter);
+
+                        ItemTouchHelper itemTouchHelper = new
+                                ItemTouchHelper(new SwipeToDeleteCallback(logEntryAdapter));
+                        itemTouchHelper.attachToRecyclerView(recyclerView);
 
                         //Calculate totalTime
                         TextView txtTotalTime = findViewById(R.id.txt_total_time_month);
