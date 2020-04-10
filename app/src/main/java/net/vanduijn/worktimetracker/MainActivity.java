@@ -1,5 +1,6 @@
 package net.vanduijn.worktimetracker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -137,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
                 .update("startTimeMillis", startTime)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "startTimeMillis successfully updated to: " + startTime);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "startTimeMillis does not exist, adding startTimeMillis...");
+                    Map<String, Long> map = new HashMap<>();
+                    map.put("startTimeMillis", startTime);
+                    db.collection(user.getUid()).document(WORK_LOG).set(map);
                 });
     }
 
@@ -145,6 +153,12 @@ public class MainActivity extends AppCompatActivity {
                 .update("isWorking", isWorking)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "isWorking successfully updated to: " + isWorking);
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "isWorking does not exist, adding isWorking...");
+                    Map<String, Boolean> map = new HashMap<>();
+                    map.put("isWorking", isWorking);
+                    db.collection(user.getUid()).document(WORK_LOG).set(map);
                 });
     }
 
@@ -153,6 +167,12 @@ public class MainActivity extends AppCompatActivity {
                 .update(LATEST_LOG, documentReference)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "latestPath successfully updated to: " + documentReference.getPath());
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "latestLog does not exist, adding latestLog...");
+                    Map<String, DocumentReference> map = new HashMap<>();
+                    map.put(LATEST_LOG, documentReference);
+                    db.collection(user.getUid()).document(WORK_LOG).set(map);
                 });
     }
 
