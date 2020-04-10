@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -69,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
             handler.removeCallbacks(runnable);
             Log.d("EndTime", now.toString());
         }
-
-        updateStartStopButton();
     }
 
     private void updateStartStopButton() {
@@ -104,10 +104,7 @@ public class MainActivity extends AppCompatActivity {
         db.collection(user.getUid()).document(WORK_LOG).collection(now.toString().substring(0, 7))
                 .add(log)
                 .addOnSuccessListener(documentReference -> {
-                    setStartTimeMillis(startTime);
-                    setIsWorking(true);
                     setLatestLog(documentReference);
-                    updateStartStopButton();
                     Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                 })
                 .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
@@ -129,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 .update(END_TIME, now.toString())
                 .addOnSuccessListener(aVoid -> {
                     setIsWorking(false);
-                    updateStartStopButton();
                     Log.d(TAG, "End_time added in: " + documentReference.getPath());
                 });
     }
@@ -144,8 +140,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "startTimeMillis does not exist, adding startTimeMillis...");
                     Map<String, Long> map = new HashMap<>();
                     map.put("startTimeMillis", startTime);
-                    db.collection(user.getUid()).document(WORK_LOG).set(map);
-                });
+                    db.collection(user.getUid()).document(WORK_LOG).set(map).addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "startTimeMillis successfully added");
+                    });
+                })
+                .addOnCompleteListener(task -> setIsWorking(true));
     }
 
     private void setIsWorking(boolean isWorking) {
@@ -159,7 +158,8 @@ public class MainActivity extends AppCompatActivity {
                     Map<String, Boolean> map = new HashMap<>();
                     map.put("isWorking", isWorking);
                     db.collection(user.getUid()).document(WORK_LOG).set(map);
-                });
+                })
+                .addOnCompleteListener(task -> updateStartStopButton());
     }
 
     private void setLatestLog(DocumentReference documentReference) {
@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
                     Map<String, DocumentReference> map = new HashMap<>();
                     map.put(LATEST_LOG, documentReference);
                     db.collection(user.getUid()).document(WORK_LOG).set(map);
-                });
+                })
+                .addOnCompleteListener(task -> setStartTimeMillis(startTime));
     }
 
     public void toMonthOverview(View view) {
